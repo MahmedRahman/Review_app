@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>App Reviews</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+   
+   <script>
+        async function fetchReviews() {
+            const appIdInput = document.getElementById("app-id");
+            const appId = appIdInput.value;
+            const spinner = document.getElementById("spinner");
+            const reviewList = document.getElementById("review-list");
+
+            reviewList.innerHTML = "";
+            spinner.classList.remove("d-none");
+
+            const response = await fetch(`/scrape?app_id=${appId}`);
+            const data = await response.json();
+
+            spinner.classList.add("d-none");
+
+            for (const review of data.reviews) {
+                const card = document.createElement("div");
+                card.className = "card mb-3";
+
+                const cardBody = document.createElement("div");
+                cardBody.className = "card-body";
+
+                const cardTitle = document.createElement("h5");
+                cardTitle.className = "card-title";
+                cardTitle.textContent = `${review.author} (${review.date})`;
+
+              
+            const cardText = document.createElement("p");
+            cardText.className = "card-text";
+            cardText.textContent = review.review_text;
+
+            const replyElement = document.createElement("p");
+            replyElement.className = "card-text text-muted";
+            replyElement.textContent = "";
+
+            const cardButton = document.createElement("button");
+            cardButton.className = "btn btn-primary";
+            cardButton.textContent = "Generate Friendly Reply";
+            cardButton.onclick = function() {
+                generateFriendlyReply(review.review_text, replyElement);
+            };
+
+            cardBody.appendChild(cardTitle);
+            cardBody.appendChild(cardText);
+            cardBody.appendChild(replyElement);
+            cardBody.appendChild(cardButton);
+            card.appendChild(cardBody);
+            reviewList.appendChild(card);
+            }
+        }
+  
+        async function generateFriendlyReply(reviewText) {
+    const prompt = `Create a friendly reply to the following review:\n\n"${reviewText}"\n\nReply: `;
+    const apiKey = "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";
+    const apiUrl = "https://api.openai.com/v1/engines/davinci-codex/completions";
+
+    try {
+        const response = await axios.post(apiUrl, {
+            prompt: prompt,
+            max_tokens: 50,
+            n: 1,
+            stop: null,
+            temperature: 1,
+        }, {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${apiKey}`
+            }
+        });
+
+        const reply = response.data.choices[0].text.trim();
+        replyElement.textContent = `Friendly reply: ${reply}`;
+
+        alert(`Friendly reply: ${reply}`);
+    } catch (error) {
+        console.error("Error generating friendly reply:", error);
+        alert("Error generating friendly reply. Please check console for details.");
+    }
+}
+
+  </script>
+</head>
+<body class="container py-5">
+    <h1>App Reviews</h1>
+    <div class="mb-3">
+        <label for="app-id" class="form-label">App ID:</label>
+        <input type="text" class="form-control" id="app-id" placeholder="Enter app ID">
+    </div>
+    <button class="btn btn-primary mb-3" onclick="fetchReviews()">Fetch Reviews</button>
+
+    <div class="spinner-border text-primary d-none" id="spinner" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+
+    <div id="review-list">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</body>
+</html>
