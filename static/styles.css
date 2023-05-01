@@ -1,0 +1,90 @@
+/* styles.css */
+.bg-placeholder-img {
+    width: 100%;
+    height: 300px;
+    background-color: #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .bg-placeholder-img p {
+    color: #777;
+  }
+  
+  
+
+  .feature-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 1rem;
+    border: 1px solid #eaeaea;
+    border-radius: 5px;
+  }
+  
+  .feature-image {
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .feature-image img {
+    width: 100%;
+    height: 200px; /* Set the desired height here */
+    object-fit: cover;
+  }
+  
+  .feature-content {
+    margin-top: 1rem;
+  }
+  
+  body {
+    font-family: 'Montserrat', sans-serif;
+    color: #333;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Josefin Sans', sans-serif;
+  }
+
+  /* Add background color and padding to the page header */
+  #header {
+    background-color: #f8f9fa;
+    padding: 1rem;
+  }
+
+  /* Add background color to the hero section */
+  #hero {
+    background-color: #dbe5f1;
+  }
+
+  /* Add background color and padding to the featured section */
+  #featured {
+    background-color: #f8f9fa;
+    padding: 1rem;
+  }
+  
+  /* Add color to the spinner */
+  .spinner-border.text-success {
+    color: #28a745;
+  }
+  
+  /* Add custom color to the app URL input field */
+  .form-control:focus {
+    border-color: #28a745;
+    box-shadow: none;
+  }
+
+  /* Add custom color to the Get Reviews button */
+  .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+  }
+
+  .bg-placeholder-img img {
+   
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }

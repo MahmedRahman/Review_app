@@ -64,7 +64,7 @@ async function generateFriendlyReply(reviewText, replyElement, buttonSpinner) {
   buttonSpinner.classList.remove("d-none");
 
   const prompt = `Create a friendly reply to the following review:\n\n"${reviewText}"\n\nReply: `;
-  const apiKey = "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";
+  const apiKey = "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";
   const apiUrl = "https://api.openai.com/v1/completions";
 
   try {
@@ -73,7 +73,7 @@ async function generateFriendlyReply(reviewText, replyElement, buttonSpinner) {
       {
         model: "text-davinci-003",
         prompt: prompt,
-        max_tokens: 50,
+
         temperature: 1,
         n: 1,
       },
@@ -130,5 +130,31 @@ function handleApiError(error) {
     alert("Error generating friendly reply. Please check console for details.");
   }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  loadPartial("header", "/static/partials/header.html");
+  loadPartial("footer", "/static/partials/footer.html");
+});
+
+async function loadPartial(elementId, partialUrl) {
+  const element = document.getElementById(elementId);
+
+  if (element) {
+    try {
+      const response = await fetch(partialUrl);
+
+      if (response.status === 200) {
+        const html = await response.text();
+        element.innerHTML = html;
+      } else {
+        console.error(`Error ${response.status} while loading partial ${partialUrl}`);
+      }
+    } catch (error) {
+      console.error(`Error while loading partial ${partialUrl}:`, error);
+    }
+  }
+}
+
+// The rest of the existing code
 
 document.getElementById("fetch-reviews-button").addEventListener("click", fetchReviews);

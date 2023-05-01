@@ -1,5 +1,6 @@
 # app.py
-from flask import Flask, request, jsonify
+
+from flask import Flask, render_template, request, jsonify
 from google_play_scraper import app as app_info, Sort, reviews_all
 from flask import render_template
 
@@ -13,6 +14,14 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
 
 
 @app.route("/scrape", methods=["GET"])
