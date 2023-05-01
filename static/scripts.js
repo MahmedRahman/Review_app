@@ -1,13 +1,20 @@
 async function fetchReviews() {
   const appUrlInput = document.getElementById("app-url");
   const appUrl = appUrlInput.value;
-  const appId = extractAppId(appUrl);
 
   const spinner = document.getElementById("spinner");
   const reviewList = document.getElementById("review-list");
 
+  const appId = extractAppId(appUrl);
   if (!appId) {
     alert("Invalid URL. Please enter a valid Google Play URL.");
+    return;
+  }
+
+  const apiKey = prompt("Please enter your OpenAI API key:");
+
+  if (!apiKey) {
+    alert("You must enter an API key to use this app.");
     return;
   }
   reviewList.innerHTML = "";
@@ -48,7 +55,7 @@ async function fetchReviews() {
     cardButton.appendChild(buttonSpinner);
 
     cardButton.onclick = function () {
-      generateFriendlyReply(review.review_text, replyElement, buttonSpinner);
+      generateFriendlyReply(review.review_text, replyElement, buttonSpinner, apiKey);
     };
 
     cardBody.appendChild(cardTitle);
@@ -60,11 +67,11 @@ async function fetchReviews() {
   }
 }
 
-async function generateFriendlyReply(reviewText, replyElement, buttonSpinner) {
+async function generateFriendlyReply(reviewText, replyElement, buttonSpinner, apiKey) {
   buttonSpinner.classList.remove("d-none");
 
   const prompt = `Create a friendly reply to the following review:\n\n"${reviewText}"\n\nReply: `;
-  const apiKey = "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";
+
   const apiUrl = "https://api.openai.com/v1/completions";
 
   try {
