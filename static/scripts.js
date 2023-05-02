@@ -71,7 +71,7 @@ async function generateFriendlyReply(reviewText, replyElement, buttonSpinner, ap
   buttonSpinner.classList.remove("d-none");
 
   //const prompt = `Create a friendly reply to the following review:\n\n"${reviewText}"\n\nReply: `;
-  const prompt = `Create a friendly reply for a user facing technical difficulties. Please provide a complete response with possible solutions and contact information for further assistance in about 85 words: ${userMessage}`;
+  const prompt = `Create a friendly reply for a user facing technical difficulties. Please provide a complete response with possible solutions and contact information for further assistance in about 85 words: \n\n"${reviewText}"`;
 
   const apiUrl = "https://api.openai.com/v1/completions";
 
