@@ -70,7 +70,8 @@ async function fetchReviews() {
 async function generateFriendlyReply(reviewText, replyElement, buttonSpinner, apiKey) {
   buttonSpinner.classList.remove("d-none");
 
-  const prompt = `Create a friendly reply to the following review:\n\n"${reviewText}"\n\nReply: `;
+  //const prompt = `Create a friendly reply to the following review:\n\n"${reviewText}"\n\nReply: `;
+  const prompt = `Create a friendly reply for a user facing technical difficulties. Please provide a complete response with possible solutions and contact information for further assistance in about 85 words: ${userMessage}`;
 
   const apiUrl = "https://api.openai.com/v1/completions";
 
@@ -80,7 +81,7 @@ async function generateFriendlyReply(reviewText, replyElement, buttonSpinner, ap
       {
         model: "text-davinci-003",
         prompt: prompt,
-
+        max_tokens: 170, // Adjust this value based on your requirements
         temperature: 1,
         n: 1,
       },
