@@ -18,7 +18,7 @@ def generate_reply():
     load_dotenv()
 
     openai_api_key = os.environ["OPENAIAPIKEY"]
-    return jsonify(f"{openai_api_key}")
+   
     prompt = '''Create a friendly reply for a user. 
     Please provide a complete response in about 85 words: \n\n"{review_text}"'''
 
