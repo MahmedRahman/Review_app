@@ -19,8 +19,10 @@ def generate_reply():
 
     openai_api_key = os.environ["OPENAIAPIKEY"]
    
-    prompt = '''Create a friendly reply for a user. 
-    Please provide a complete response in about 85 words: \n\n"{review_text}"'''
+    prompt = f'''Create a friendly reply for a user. 
+    Please provide a complete response in about 85 words: {review_text}'''
+
+
 
     api_url = "https://api.openai.com/v1/completions"
     headers = {
