@@ -48,7 +48,10 @@ def generate_reply():
     if friendly_reply is not None:
         return jsonify({'reply': friendly_reply})
     else:
-        error_message = f"Error generating friendly reply: {error}"
+        if 'error' in locals():
+            error_message = f"Error generating friendly reply: {error}"
+        else:
+            error_message = "Error generating friendly reply, but no details available."
         return jsonify({'error': 'Error generating friendly reply.', 'details': error_message}), 500
 
 
