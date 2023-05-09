@@ -63,49 +63,6 @@ async function fetchReviews() {
   }
 }
 
-/*
-async function generateFriendlyReply(reviewText, replyElement, buttonSpinner) {
-  buttonSpinner.classList.remove("d-none");
-
-  //const prompt = `Create a friendly reply to the following review:\n\n"${reviewText}"\n\nReply: `;
- 
-  const response = await fetch(`/generate_reply?app_id=${appId}`);
-  const data = await response.json();
-
-
-  const apiUrl = "https://api.openai.com/v1/completions";
-
-  try {
-    const response = await axios.post(
-      apiUrl,
-      {
-        model: "text-davinci-003",
-        prompt: prompt,
-        max_tokens: 170, // Adjust this value based on your requirements
-        temperature: 1,
-        n: 1,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
-      }
-    );
-
-    const reply = response.data.choices[0].text.trim();
-    
-    replyElement.textContent = `Friendly reply: ${reply}`;
-  } catch (error) {
-    console.error("Error generating friendly reply:", error);
-
-    handleApiError(error);
-  } finally {
-    // Hide the spinner
-    buttonSpinner.classList.add("d-none");
-  }
-}
-*/
 
 async function generateFriendlyReplyJS(reviewText, replyElement , buttonSpinner) {
   buttonSpinner.classList.remove("d-none");
