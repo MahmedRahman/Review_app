@@ -13,13 +13,17 @@ app = Flask(__name__)
 @app.route('/generate_reply', methods=['POST'])
 def generate_reply():
     review_text = request.json.get('review_text')
-    global OPENAI_API_KEY
+
+    load_dotenv()
+
+    openai_api_key = os.environ["OPENAI_API_KEY"]
+
     prompt = f'Create a friendly reply for a user facing technical difficulties. Please provide a complete response with possible solutions and contact information for further assistance in about 85 words: \n\n"{review_text}"'
 
     api_url = "https://api.openai.com/v1/completions"
     headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer ",
+        "Authorization": f"Bearer {openai_api_key}",
     }
     data = {
         "model": "text-davinci-003",
