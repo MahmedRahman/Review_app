@@ -19,7 +19,7 @@ def generate_reply():
     api_url = "https://api.openai.com/v1/completions"
     headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer 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",
+        "Authorization": "Bearer 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",
     }
     data = {
         "model": "text-davinci-003",
