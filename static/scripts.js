@@ -11,12 +11,7 @@ async function fetchReviews() {
     return;
   }
 
-  const apiKey = prompt("Please enter your OpenAI API key:");
 
-  if (!apiKey) {
-    alert("You must enter an API key to use this app.");
-    return;
-  }
   reviewList.innerHTML = "";
   spinner.classList.remove("d-none");
 
@@ -55,7 +50,8 @@ async function fetchReviews() {
     cardButton.appendChild(buttonSpinner);
 
     cardButton.onclick = function () {
-      generateFriendlyReply(review.review_text, replyElement, buttonSpinner, apiKey);
+      //buttonSpinner
+      generateFriendlyReplyJS(review.review_text, replyElement, buttonSpinner);
     };
 
     cardBody.appendChild(cardTitle);
@@ -67,11 +63,15 @@ async function fetchReviews() {
   }
 }
 
-async function generateFriendlyReply(reviewText, replyElement, buttonSpinner, apiKey) {
+/*
+async function generateFriendlyReply(reviewText, replyElement, buttonSpinner) {
   buttonSpinner.classList.remove("d-none");
 
   //const prompt = `Create a friendly reply to the following review:\n\n"${reviewText}"\n\nReply: `;
-  const prompt = `Create a friendly reply for a user facing technical difficulties. Please provide a complete response with possible solutions and contact information for further assistance in about 85 words: \n\n"${reviewText}"`;
+ 
+  const response = await fetch(`/generate_reply?app_id=${appId}`);
+  const data = await response.json();
+
 
   const apiUrl = "https://api.openai.com/v1/completions";
 
@@ -94,6 +94,7 @@ async function generateFriendlyReply(reviewText, replyElement, buttonSpinner, ap
     );
 
     const reply = response.data.choices[0].text.trim();
+    
     replyElement.textContent = `Friendly reply: ${reply}`;
   } catch (error) {
     console.error("Error generating friendly reply:", error);
@@ -104,6 +105,31 @@ async function generateFriendlyReply(reviewText, replyElement, buttonSpinner, ap
     buttonSpinner.classList.add("d-none");
   }
 }
+*/
+
+async function generateFriendlyReplyJS(reviewText, replyElement , buttonSpinner) {
+  buttonSpinner.classList.remove("d-none");
+ 
+  try {
+    const response = await axios.post('/generate_reply', {
+      review_text: reviewText,
+    });
+
+    if (response.data.reply) {
+      replyElement.textContent = response.data.reply;
+    } else {
+      replyElement.textContent = 'Error generating friendly reply.';
+      console.error('Error:', response.data.error, 'Details:', response.data.details);
+    }
+  } catch (error) {
+    replyElement.textContent = 'Error generating friendly reply.';
+    console.error('Error:', error);
+  } finally {
+    // Hide the spinner
+    buttonSpinner.classList.add("d-none");
+  }
+}
+
 
 function extractAppId(url) {
   const match = url.match(/id=([\w\d_.]+)/);
