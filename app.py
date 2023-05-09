@@ -5,7 +5,6 @@ from flask import Flask, render_template, request, jsonify
 from google_play_scraper import app as app_info, Sort, reviews_all
 from flask import render_template
 from dotenv import load_dotenv
-from config import OPENAI_API_KEY
 
 app = Flask(__name__)
 
