@@ -39,8 +39,8 @@ def generate_reply():
         reply = response.json()["choices"][0]["text"].strip()
         friendly_reply = f"Friendly reply: {reply}"
     except requests.exceptions.RequestException as error:
-        print(f"Error generating friendly reply: {error}")
-        return jsonify({'error': 'Error generating friendly reply.', 'details': error_message}), 500
+        
+        return jsonify({'error': 'Error generating friendly reply.', 'details': error}), 500
 
         # Handle the API error as appropriate for your application
         friendly_reply= None
