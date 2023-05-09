@@ -29,31 +29,25 @@ def generate_reply():
         "n": 1,
     }
 
-    friendly_reply= None
+    friendly_reply = None
+    error_message = None
 
     try:
         response = requests.post(api_url, json=data, headers=headers)
 
         response.raise_for_status()
-       
+
         reply = response.json()["choices"][0]["text"].strip()
         friendly_reply = f"Friendly reply: {reply}"
     except requests.exceptions.RequestException as error:
-        
-        return jsonify({'error': 'Error generating friendly reply.', 'details': error}), 500
-
-        # Handle the API error as appropriate for your application
-        friendly_reply= None
+        print(f"Error generating friendly reply: {error}")
+        error_message = f"Error generating friendly reply: {error}"
+        friendly_reply = None
 
     if friendly_reply is not None:
         return jsonify({'reply': friendly_reply})
     else:
-        if 'error' in locals():
-            error_message = f"Error generating friendly reply: {error}"
-        else:
-            error_message = "Error generating friendly reply, but no details available."
         return jsonify({'error': 'Error generating friendly reply.', 'details': error_message}), 500
-
 
 
 @app.route("/scrape", methods=["GET"])
