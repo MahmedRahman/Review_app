@@ -1,16 +1,18 @@
-from flask import Blueprint, request, jsonify
-import requests
-from google_play_scraper import app as app_info, Sort, reviews_all
-from requests_toolbelt.utils import dump
-import requests
-from dotenv import load_dotenv
-
 import json  # import the json module
+import requests
+import requests
+import os
+from flask import Blueprint, request, jsonify
+from google_play_scraper import app as app_info, Sort, reviews
+from requests_toolbelt.utils import dump
+from dotenv import load_dotenv
+from helper.responses import create_response
 
-endpoint = Blueprint('endpoint', __name__)
 
-@endpoint.route('/generate_reply', methods=['POST'])
-def generate_reply():
+endpoint_app_review = Blueprint('endpoint_app_review', __name__)
+
+@endpoint_app_review.route('/friendly_reply', methods=['POST'])
+def friendly_reply():
     review_text = request.json.get('review_text')
 
     load_dotenv()
@@ -51,49 +53,42 @@ def generate_reply():
         friendly_reply = None
 
     if friendly_reply is not None:
-        return jsonify({'reply': friendly_reply})
+        return create_response(success=True, code=200,data=friendly_reply)
     else:
-        return jsonify({'error': 'Error generating friendly reply.', 'details': error_message}), 500
+        return create_response(success=False, code=400,errors=[{"error": "Error generating friendly reply"}])
 
 
-@endpoint.route("/scrape", methods=["GET"])
+@endpoint_app_review.route("/scrape_reply", methods=["GET"])
 def scrape():
-    #... Your existing code here ...
     app_id = request.args.get("app_id")
 
     if not app_id:
-        return jsonify({"error": "app_id is required"}), 400
+        return create_response(success=False, code=400,errors=[{"error": "app_id is required"}])
+       
 
     app_details = app_info(app_id)
+
     rating = app_details["score"]
+    
     total_ratings = app_details["ratings"]
 
-    reviews = reviews_all(
+    result, continuation_token = reviews(
         app_id,
-        sleep_milliseconds=0,
-        lang="en",
-        country="us",
+        count=5,
         sort=Sort.MOST_RELEVANT,
     )
-
-    review_data = []
    
-
-    for review in reviews:
-        review_data.append({
-            "author": review["userName"],
-            "date": review["at"].strftime("%Y-%m-%d"),
-            "review_text": review["content"],
-        })
-
-    review_data = review_data[:10]
-
     data = {
-        "rating": rating,
-        "total_ratings": total_ratings,
-        "reviews": review_data,
-    }
+            "rating": rating,
+            "total_ratings": total_ratings,
+            "reviews": result,
+         }
+    
+    
+    return create_response(success=True, code=200,data=data)
 
-    return jsonify(data)
+    
+
+   
 
 

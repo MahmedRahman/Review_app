@@ -1,4 +1,5 @@
 async function fetchReviews() {
+  console.log("hi");
   const appUrlInput = document.getElementById("app-url");
   const appUrl = appUrlInput.value;
 
@@ -11,69 +12,54 @@ async function fetchReviews() {
     return;
   }
 
-
   reviewList.innerHTML = "";
   spinner.classList.remove("d-none");
 
-  const response = await fetch(`/scrape?app_id=${appId}`);
+  const response = await fetch(`/scrape_reply?app_id=${appId}`);
   const data = await response.json();
 
   spinner.classList.add("d-none");
+  let row_box;
+  for (const review of data.data.reviews) {
+    
+     row_box = `
+    <div class="card mb-3">
+    <div class="card-body">
+    <h5 class="card-title">   ${review.at}</h5>
+      <h5 class="card-title"> ${review.content}</h5>
+      <p class="card-text"></p>
+      <p id="replyElement">
 
-  for (const review of data.reviews) {
-    const card = document.createElement("div");
-    card.className = "card mb-3";
+      </p>
+      <p class="card-text text-muted"></p>
+      <button class="btn btn-primary d-flex align-items-center" onclick="${generateFriendlyReplyJS(event, review.content)}">
+      Generate Friendly Reply
+        <div class="spinner-border spinner-border-sm ms-2 d-none" role="status"><span class="visually-hidden">Loading...</span></div>
+      </button>
+    </div>
+  </div>`;
 
-    const cardBody = document.createElement("div");
-    cardBody.className = "card-body";
 
-    const cardTitle = document.createElement("h5");
-    cardTitle.className = "card-title";
-    cardTitle.textContent = `${review.author} (${review.date})`;
-
-    const cardText = document.createElement("p");
-    cardText.className = "card-text";
-    cardText.textContent = review.review_text;
-
-    const replyElement = document.createElement("p");
-    replyElement.className = "card-text text-muted";
-    replyElement.textContent = "";
-
-    const cardButton = document.createElement("button");
-    cardButton.className = "btn btn-primary d-flex align-items-center";
-    cardButton.textContent = "Generate Friendly Reply";
-
-    const buttonSpinner = document.createElement("div");
-    buttonSpinner.className = "spinner-border spinner-border-sm ms-2 d-none";
-    buttonSpinner.setAttribute("role", "status");
-    buttonSpinner.innerHTML = '<span class="visually-hidden">Loading...</span>';
-    cardButton.appendChild(buttonSpinner);
-
-    cardButton.onclick = function () {
-      //buttonSpinner
-      generateFriendlyReplyJS(review.review_text, replyElement, buttonSpinner);
-    };
-
-    cardBody.appendChild(cardTitle);
-    cardBody.appendChild(cardText);
-    cardBody.appendChild(replyElement);
-    cardBody.appendChild(cardButton);
-    card.appendChild(cardBody);
-    reviewList.appendChild(card);
+ reviewList.innerHTML += row_box;
+    
   }
+
+
 }
 
 
-async function generateFriendlyReplyJS(reviewText, replyElement , buttonSpinner) {
+async function generateFriendlyReplyJS(e,reviewText) {
+  console.log(e.target)
   buttonSpinner.classList.remove("d-none");
- 
+  const replyElement = document.getElementById("replyElement"); 
   try {
-    const response = await axios.post('/generate_reply', {
+    const response = await axios.post('/friendly_reply', {
       review_text: reviewText,
     });
 
-    if (response.data.reply) {
-      replyElement.textContent = response.data.reply;
+    if (response.data) {
+      console.log(response.data);
+      replyElement.textContent = response.data["data"];
     } else {
       replyElement.textContent = 'Error generating friendly reply.';
       console.error('Error:', response.data.error, 'Details:', response.data.details);
@@ -83,7 +69,7 @@ async function generateFriendlyReplyJS(reviewText, replyElement , buttonSpinner)
     console.error('Error:', error);
   } finally {
     // Hide the spinner
-    buttonSpinner.classList.add("d-none");
+    //buttonSpinner.classList.add("d-none");
   }
 }
 

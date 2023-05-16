@@ -1,0 +1,42 @@
+console.log(row_box)
+    const card = document.createElement("div");
+    card.className = "card mb-3";
+
+    const cardBody = document.createElement("div");
+    cardBody.className = "card-body";
+
+    const cardTitle = document.createElement("h5");
+    cardTitle.className = "card-title";
+    cardTitle.textContent = ``;
+
+    const cardText = document.createElement("p");
+    cardText.className = "card-text";
+    cardText.textContent = review.review_text;
+
+    const replyElement = document.createElement("p");
+    replyElement.className = "card-text text-muted";
+    replyElement.textContent = "";
+
+    const cardButton = document.createElement("button");
+    cardButton.className = "btn btn-primary d-flex align-items-center";
+    cardButton.textContent = "Generate Friendly Reply";
+
+    const buttonSpinner = document.createElement("div");
+    buttonSpinner.className = "spinner-border spinner-border-sm ms-2 d-none";
+    buttonSpinner.setAttribute("role", "status");
+    buttonSpinner.innerHTML = '<span class="visually-hidden">Loading...</span>';
+    cardButton.appendChild(buttonSpinner);
+
+    cardButton.onclick = function () {
+      //buttonSpinner
+      generateFriendlyReplyJS(review.content, replyElement, buttonSpinner);
+    };
+
+    cardBody.appendChild(cardTitle);
+    cardBody.appendChild(cardText);
+    cardBody.appendChild(replyElement);
+    cardBody.appendChild(cardButton);
+    card.appendChild(cardBody);
+    
+    let textNode = document.createTextNode(row_box);  // Create a new text node.
+    
