@@ -33,17 +33,21 @@ async function fetchReviews() {
       <p class="card-text text-muted"></p>
       <button id="generateFriendlyReplybtn${counter}" class="btn btn-primary d-flex align-items-center" >
       Generate Friendly Reply
-        <div class="spinner-border spinner-border-sm ms-2 d-none" role="status"><span class="visually-hidden">Loading...</span></div>
-      </button>
+      <div id="spinner${counter}" class="spinner-border spinner-border-sm ms-2 d-none" role="status">
+      <span class="visually-hidden">Loading...</span>
+  </div>
+    </button>
     </div>
   </div>`;
 
     let generateFriendlyReplybtn = row_box.querySelector(`#generateFriendlyReplybtn${counter}`);
     let replyElement = row_box.querySelector(`#replyElement${counter}`);
+    let spinner = row_box.querySelector(`#spinner${counter}`);
 
-    generateFriendlyReplybtn.onclick = function () {
-      console.log("hi");
-      generateFriendlyReplyJS(review.content, replyElement);
+    generateFriendlyReplybtn.onclick = async function () {
+      spinner.classList.remove("d-none"); // show spinner
+      await generateFriendlyReplyJS(review.content, replyElement);
+      spinner.classList.add("d-none"); // hide spinner
     };
 
     reviewList.appendChild(row_box); // append the new element to the container
