@@ -40,3 +40,6 @@ console.log(row_box)
     
     let textNode = document.createTextNode(row_box);  // Create a new text node.
     
+
+    <section id="featured"></section>
+    

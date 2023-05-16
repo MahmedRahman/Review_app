@@ -14,7 +14,7 @@
     <section class="container flex-grow-1">
       <h1 class="text-center mb-4 mt-4">App Review Fetcher</h1>
       <div class="input-group mb-3">
-        <input type="text" class="form-control py-2 border-end-0 border rounded-start" id="app-url" placeholder="Enter app URL" />
+        <input type="text" class="form-control py-2 border-end-0 border rounded-start" id="app-url" placeholder="Enter app URL" value="https://play.google.com/store/apps/details?id=com.big.ludocafe"/>
         <button class="btn btn-success border-start-0 border rounded-end" onclick="fetchReviews()">Get Reviews</button>
       </div>
 
@@ -23,17 +23,12 @@
       </div>
 
       <div id="review-list">
-        <button class="btn btn-primary d-flex align-items-center" onclick="generateFriendlyReplyJS($event, review.content);">
-          Generate Friendly Reply
-          <div class="spinner-border spinner-border-sm ms-2 d-none" role="status"><span class="visually-hidden">Loading...</span></div>
-        </button>
-        <p id="replyElement">
-
-        </p>
+        
       </div>
     </section>
-    
-    <section id="featured"></section>
+    <div id="replay-view"></div>
+
+
     <footer id="footer"></footer>
 
 

@@ -25,48 +25,45 @@ async function fetchReviews() {
      row_box = `
     <div class="card mb-3">
     <div class="card-body">
-    <h5 class="card-title">   ${review.at}</h5>
+      <h5 class="card-title">${review.at}</h5>
       <h5 class="card-title"> ${review.content}</h5>
       <p class="card-text"></p>
-      <p id="replyElement">
-
-      </p>
+      <p id="replyElement-${review.reviewId}"></p>
       <p class="card-text text-muted"></p>
-      <button class="btn btn-primary d-flex align-items-center" onclick="${generateFriendlyReplyJS(event, review.content)}">
+      <button class="btn btn-primary d-flex align-items-center" onclick="${generateFriendlyReplyJS(review.content,review.reviewId)}">
       Generate Friendly Reply
         <div class="spinner-border spinner-border-sm ms-2 d-none" role="status"><span class="visually-hidden">Loading...</span></div>
       </button>
     </div>
   </div>`;
-
-
- reviewList.innerHTML += row_box;
-    
+    reviewList.innerHTML += row_box; 
   }
 
 
 }
 
 
-async function generateFriendlyReplyJS(e,reviewText) {
-  console.log(e.target)
-  buttonSpinner.classList.remove("d-none");
-  const replyElement = document.getElementById("replyElement"); 
+async function generateFriendlyReplyJS(review,reviewId) {
+  // buttonSpinner.classList.remove("d-none");
+  console.log(this); // Logs the button element
+
+   console.log(review.reviewId);
+  const replyElement = document.getElementById(`replyElement-${reviewId}`); 
   try {
     const response = await axios.post('/friendly_reply', {
-      review_text: reviewText,
+      review_text: review,
     });
 
     if (response.data) {
-      console.log(response.data);
+      // console.log(response.data);
       replyElement.textContent = response.data["data"];
     } else {
       replyElement.textContent = 'Error generating friendly reply.';
       console.error('Error:', response.data.error, 'Details:', response.data.details);
     }
   } catch (error) {
-    replyElement.textContent = 'Error generating friendly reply.';
-    console.error('Error:', error);
+   // replyElement.textContent = 'Error generating friendly reply.';
+    console.log('Error:', error);
   } finally {
     // Hide the spinner
     //buttonSpinner.classList.add("d-none");
