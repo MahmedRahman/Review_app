@@ -19,38 +19,41 @@ async function fetchReviews() {
   const data = await response.json();
 
   spinner.classList.add("d-none");
-  let row_box;
+  let container = document.getElementById("container"); // replace 'container' with the id of your container
+  let counter = 0; // to make each button id unique
   for (const review of data.data.reviews) {
-    
-     row_box = `
+    let row_box = document.createElement("div");
+    row_box.innerHTML = `
     <div class="card mb-3">
     <div class="card-body">
       <h5 class="card-title">${review.at}</h5>
       <h5 class="card-title"> ${review.content}</h5>
       <p class="card-text"></p>
-      <p id="replyElement-${review.reviewId}"></p>
+      <p id="replyElement${counter}"></p>
       <p class="card-text text-muted"></p>
-      <button class="btn btn-primary d-flex align-items-center" onclick="${generateFriendlyReplyJS(review.content,review.reviewId)}">
+      <button id="generateFriendlyReplybtn${counter}" class="btn btn-primary d-flex align-items-center" >
       Generate Friendly Reply
         <div class="spinner-border spinner-border-sm ms-2 d-none" role="status"><span class="visually-hidden">Loading...</span></div>
       </button>
     </div>
   </div>`;
-    reviewList.innerHTML += row_box; 
+
+    let generateFriendlyReplybtn = row_box.querySelector(`#generateFriendlyReplybtn${counter}`);
+    let replyElement = row_box.querySelector(`#replyElement${counter}`);
+
+    generateFriendlyReplybtn.onclick = function () {
+      console.log("hi");
+      generateFriendlyReplyJS(review.content, replyElement);
+    };
+
+    reviewList.appendChild(row_box); // append the new element to the container
+    counter++; // increment counter after each iteration
   }
-
-
 }
 
-
-async function generateFriendlyReplyJS(review,reviewId) {
-  // buttonSpinner.classList.remove("d-none");
-  console.log(this); // Logs the button element
-
-   console.log(review.reviewId);
-  const replyElement = document.getElementById(`replyElement-${reviewId}`); 
+async function generateFriendlyReplyJS(review, replyElement) {
   try {
-    const response = await axios.post('/friendly_reply', {
+    const response = await axios.post("/friendly_reply", {
       review_text: review,
     });
 
@@ -58,18 +61,17 @@ async function generateFriendlyReplyJS(review,reviewId) {
       // console.log(response.data);
       replyElement.textContent = response.data["data"];
     } else {
-      replyElement.textContent = 'Error generating friendly reply.';
-      console.error('Error:', response.data.error, 'Details:', response.data.details);
+      replyElement.textContent = "Error generating friendly reply.";
+      console.error("Error:", response.data.error, "Details:", response.data.details);
     }
   } catch (error) {
-   // replyElement.textContent = 'Error generating friendly reply.';
-    console.log('Error:', error);
+    // replyElement.textContent = 'Error generating friendly reply.';
+    console.log("Error:", error);
   } finally {
     // Hide the spinner
     //buttonSpinner.classList.add("d-none");
   }
 }
-
 
 function extractAppId(url) {
   const match = url.match(/id=([\w\d_.]+)/);
@@ -131,4 +133,5 @@ async function loadPartial(elementId, partialUrl) {
 
 // The rest of the existing code
 
-document.getElementById("fetch-reviews-button").addEventListener("click", fetchReviews);
+let fetchReviewsButton = document.getElementById("fetch-reviews-button");
+fetchReviewsButton.onclick = fetchReviews;
