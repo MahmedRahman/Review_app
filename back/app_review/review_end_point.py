@@ -6,7 +6,7 @@ from flask import Blueprint, request, jsonify
 from google_play_scraper import app as app_info, Sort, reviews
 from requests_toolbelt.utils import dump
 from dotenv import load_dotenv
-from helper.responses import create_response
+from back.helper.responses import create_response
 
 
 endpoint_app_review = Blueprint('endpoint_app_review', __name__)

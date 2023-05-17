@@ -1,10 +1,10 @@
 import os
 from flask import Flask
 from dotenv import load_dotenv
-from routes.routes import route
+from front.routes.routes import route
 
-from app_review.review_end_point import endpoint_app_review
-from app_postman.postman_end_point import endpoint_postman_app
+from back.app_review.review_end_point import endpoint_app_review
+from back.app_postman.postman_end_point import endpoint_postman_app
 
 app = Flask(__name__)
 
