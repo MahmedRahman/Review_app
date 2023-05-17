@@ -1,12 +1,11 @@
 import json  # import the json module
-import requests
-import requests
 import os
 from flask import Blueprint, request, jsonify
-from google_play_scraper import app as app_info, Sort, reviews
+from google_play_scraper import app as app_info, Sort, reviews, exceptions
 from requests_toolbelt.utils import dump
 from dotenv import load_dotenv
-from back.helper.responses import create_response
+from back.helper.responses import create_response, extract_app_id
+from urllib.parse import urlparse, parse_qs
 
 
 endpoint_app_review = Blueprint('endpoint_app_review', __name__)
@@ -55,39 +54,48 @@ def friendly_reply():
     if friendly_reply is not None:
         return create_response(success=True, code=200,data=friendly_reply)
     else:
-        return create_response(success=False, code=400,errors=[{"error": "Error generating friendly reply"}])
+        return create_response(success=False, code=400,errors="Error generating friendly reply")
 
 
 @endpoint_app_review.route("/scrape_reply", methods=["GET"])
 def scrape():
-    app_id = request.args.get("app_id")
+    app_url = request.args.get("app_url")
 
+    app_id = extract_app_id(app_url)
+    
+    if app_id is 'Invalid URL':
+        return create_response(success=False, code=400,errors="Invalid URL")
+    
     if not app_id:
-        return create_response(success=False, code=400,errors=[{"error": "app_id is required"}])
+        return create_response(success=False, code=400,errors="app_id is required")
        
+    try:
+        app_details = app_info(app_id)
 
-    app_details = app_info(app_id)
+        rating = app_details["score"]
+        
+        total_ratings = app_details["ratings"]
 
-    rating = app_details["score"]
+        result, continuation_token = reviews(
+            app_id,
+            count=5,
+            sort=Sort.MOST_RELEVANT,
+        )
     
-    total_ratings = app_details["ratings"]
+        data = {
+                "rating": rating,
+                "total_ratings": total_ratings,
+                "reviews": result,
+            }
 
-    result, continuation_token = reviews(
-        app_id,
-        count=5,
-        sort=Sort.MOST_RELEVANT,
-    )
+        return create_response(success=True, code=200,data=data)
+    except exceptions.NotFoundError:
+        return create_response(success=True, code=400,errors="app id not found")
+
+        
+
+
    
-    data = {
-            "rating": rating,
-            "total_ratings": total_ratings,
-            "reviews": result,
-         }
-    
-    
-    return create_response(success=True, code=200,data=data)
-
-    
 
    
 
