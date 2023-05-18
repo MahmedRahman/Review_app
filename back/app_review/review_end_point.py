@@ -1,6 +1,7 @@
 import json  # import the json module
 import os
-from flask import Blueprint, request, jsonify
+import requests
+from flask import Blueprint, request, jsonify 
 from google_play_scraper import app as app_info, Sort, reviews, exceptions
 from requests_toolbelt.utils import dump
 from dotenv import load_dotenv
@@ -12,7 +13,11 @@ endpoint_app_review = Blueprint('endpoint_app_review', __name__)
 
 @endpoint_app_review.route('/friendly_reply', methods=['POST'])
 def friendly_reply():
+    
     review_text = request.json.get('review_text')
+    
+    if review_text is None:
+        return create_response(success=False, code=400,errors="Missing review_text query parameter")
 
     load_dotenv()
 
@@ -20,8 +25,6 @@ def friendly_reply():
    
     prompt = f'''Create a friendly reply for a user. 
     Please provide a complete response in about 85 words: {review_text}'''
-
-
 
     api_url = "https://api.openai.com/v1/completions"
     headers = {
@@ -60,6 +63,19 @@ def friendly_reply():
 @endpoint_app_review.route("/scrape_reply", methods=["GET"])
 def scrape():
     app_url = request.args.get("app_url")
+
+    if app_url is None:
+        return create_response(success=False, code=400,errors="Missing app_url query parameter")
+
+
+
+    # Parse the URL and check if it has a scheme and netloc
+    url_parts = urlparse(app_url)
+    
+    if not all([url_parts.scheme, url_parts.netloc]) or 'play.google.com' not in url_parts.netloc:
+        return create_response(success=False, code=400,errors="not google play URL")
+
+
 
     app_id = extract_app_id(app_url)
     
