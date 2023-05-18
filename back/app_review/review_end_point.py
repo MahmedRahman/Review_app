@@ -68,47 +68,49 @@ def scrape():
         return create_response(success=False, code=400,errors="Missing app_url query parameter")
 
 
-
-    # Parse the URL and check if it has a scheme and netloc
-    url_parts = urlparse(app_url)
-    
-    if not all([url_parts.scheme, url_parts.netloc]) or 'play.google.com' not in url_parts.netloc:
-        return create_response(success=False, code=400,errors="not google play URL")
-
-
-
-    app_id = extract_app_id(app_url)
-    
-    if app_id is 'Invalid URL':
-        return create_response(success=False, code=400,errors="Invalid URL")
-    
-    if not app_id:
-        return create_response(success=False, code=400,errors="app_id is required")
-       
     try:
-        app_details = app_info(app_id)
-
-        rating = app_details["score"]
+        # Parse the URL and check if it has a scheme and netloc
+        url_parts = urlparse(app_url)
         
-        total_ratings = app_details["ratings"]
+        if not all([url_parts.scheme, url_parts.netloc]) or 'play.google.com' not in url_parts.netloc:
+            return create_response(success=False, code=400,errors="not google play URL")
 
-        result, continuation_token = reviews(
-            app_id,
-            count=5,
-            sort=Sort.MOST_RELEVANT,
-        )
-    
-        data = {
-                "rating": rating,
-                "total_ratings": total_ratings,
-                "reviews": result,
-            }
 
-        return create_response(success=True, code=200,data=data)
-    except exceptions.NotFoundError:
-        return create_response(success=True, code=400,errors="app id not found")
 
+        app_id = extract_app_id(app_url)
         
+        if app_id is 'Invalid URL':
+            return create_response(success=False, code=400,errors="Invalid URL")
+        
+        if not app_id:
+            return create_response(success=False, code=400,errors="app_id is required")
+        
+        try:
+            app_details = app_info(app_id)
+
+            rating = app_details["score"]
+            
+            total_ratings = app_details["ratings"]
+
+            result, continuation_token = reviews(
+                app_id,
+                count=5,
+                sort=Sort.MOST_RELEVANT,
+            )
+        
+            data = {
+                    "rating": rating,
+                    "total_ratings": total_ratings,
+                    "reviews": result,
+                }
+
+            return create_response(success=True, code=200,data=data)
+        except exceptions.NotFoundError:
+            return create_response(success=False, code=400,errors="app id not found")
+
+    except :
+        return create_response(success=False, code=400,errors="error")
+
 
 
    
