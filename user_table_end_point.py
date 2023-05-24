@@ -5,7 +5,7 @@ from user_table import UserTable
 endpoint_user_table = Blueprint('endpoint_user_table', __name__)
 
 # Create an instance of UserTable
-user_table = UserTable(host="localhost", user="root", password="12345678", database="eva")
+user_table = UserTable(host="atpfreelancer.mysql.pythonanywhere-services.com", user="atpfreelancer", password="atp5797895", database="eva")
 
 @endpoint_user_table.route('/users', methods=['GET'])
 def get_all_users():
