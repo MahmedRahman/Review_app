@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, request,Blueprint
-from DATABASES.user_table import UserTable
+from back.user_table.user_table import UserTable
 
 
 endpoint_user_table = Blueprint('endpoint_user_table', __name__)
+
+
 
 # Create an instance of UserTable
 user_table = UserTable(host="atpfreelancer.mysql.pythonanywhere-services.com", user="atpfreelancer", password="atp5797895", database="atpfreelancer$eva")
