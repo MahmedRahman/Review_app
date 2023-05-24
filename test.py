@@ -6,7 +6,7 @@ sshtunnel.TUNNEL_TIMEOUT = 5.0
 
 with sshtunnel.SSHTunnelForwarder(
     ('ssh.pythonanywhere.com'),
-    ssh_username='atpfreelancer', ssh_password='atp5797895',
+    ssh_username='atpfreelancer@gmail.com', ssh_password='atp5797895',
     remote_bind_address=('atpfreelancer.mysql.pythonanywhere-services.com', 3306)
 ) as tunnel:
     connection = MySQLdb.connect(
