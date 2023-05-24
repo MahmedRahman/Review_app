@@ -7,6 +7,7 @@ from requests_toolbelt.utils import dump
 from dotenv import load_dotenv
 from back.helper.responses import create_response, extract_app_id
 from urllib.parse import urlparse, parse_qs
+import traceback
 
 
 endpoint_app_review = Blueprint('endpoint_app_review', __name__)
@@ -77,7 +78,11 @@ def scrape():
 
 
 
-        app_id = extract_app_id(app_url)
+        try:
+            app_id = extract_app_id(app_url)
+        except ValueError:
+            return create_response(success=False, code=400,errors="Invalid URL")
+
         
         if app_id is 'Invalid URL':
             return create_response(success=False, code=400,errors="Invalid URL")
@@ -108,8 +113,9 @@ def scrape():
         except exceptions.NotFoundError:
             return create_response(success=False, code=400,errors="app id not found")
 
-    except :
-        return create_response(success=False, code=400,errors="error")
+    except Exception as e:
+        print("An error occurred: ", traceback.format_exc())  # print to console
+        return create_response(success=False, code=500, errors=str(e))  # also include it in the response
 
 
 

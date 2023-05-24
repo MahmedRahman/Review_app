@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request,Blueprint
-from user_table import UserTable
+from DATABASES.user_table import UserTable
 
 
 endpoint_user_table = Blueprint('endpoint_user_table', __name__)

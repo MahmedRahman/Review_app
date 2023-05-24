@@ -2,8 +2,6 @@ import os
 from flask import Flask
 from dotenv import load_dotenv
 from front.routes.routes import route
-from user_table import UserTable
-
 from back.app_review.review_end_point import endpoint_app_review
 from back.app_postman.postman_end_point import endpoint_postman_app
 
@@ -14,7 +12,6 @@ load_dotenv()
 openai_api_key = os.environ["OPENAIAPIKEY"]
 
 app.register_blueprint(route)
-
 app.register_blueprint(endpoint_app_review)
 app.register_blueprint(endpoint_postman_app)
 
