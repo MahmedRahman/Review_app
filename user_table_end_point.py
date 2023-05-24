@@ -11,6 +11,9 @@ user_table = UserTable(host="atpfreelancer.mysql.pythonanywhere-services.com", u
 def get_all_users():
     users = []
     all_users = user_table.get_all_users()
+
+
+    
     for user in all_users:
         users.append({
             'id': user[0],
