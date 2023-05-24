@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 from dotenv import load_dotenv
-from front.routes.routes import route
+from routes.routes import route
 from back.app_review.review_end_point import endpoint_app_review
 from back.app_postman.postman_end_point import endpoint_postman_app
 from back.user_table.user_table_end_point import endpoint_user_tabel_app
