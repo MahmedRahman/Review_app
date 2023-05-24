@@ -1,14 +1,20 @@
 import mysql.connector
+from mysql.connector import Error
 
 class UserTable:
     def __init__(self, host, user, password, database):
-        self.db = mysql.connector.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=database
-        )
-        self.cursor = self.db.cursor()
+        try:
+            self.db = mysql.connector.connect(
+                host=host,
+                user=user,
+                password=password,
+                database=database
+            )
+            if self.db.is_connected():
+                self.cursor = self.db.cursor()
+        except Error as e:
+            print("Error while connecting to MySQL", e)
+
 
     def create_user(self, name, email):
         sql = "INSERT INTO users (name, email) VALUES (%s, %s)"
